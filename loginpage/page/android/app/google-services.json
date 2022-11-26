@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "203950523095",
+    "project_id": "flutter-coffee-ca7f5",
+    "storage_bucket": "flutter-coffee-ca7f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203950523095:android:9d05e1774434691e83e692",
+        "android_client_info": {
+          "package_name": "com.example.page"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "203950523095-t5r8788tngnd28dd1bqk7h950u1oqrhn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzNIISTK5oqeg2GXYwDwX5RNG5xiJ3BOY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "203950523095-t5r8788tngnd28dd1bqk7h950u1oqrhn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
