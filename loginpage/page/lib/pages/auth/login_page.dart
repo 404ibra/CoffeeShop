@@ -15,45 +15,54 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    String topImage = "assets/image/topImage.png";
     return Scaffold(
-      backgroundColor: CustomColors.backgroundColor,
+     
       //Normally  when we pressed textfield it gives an error because other texfields are closed but we added we can prevent this erro  r
       //  with SingleChildScrollView()...
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: height * 0.25,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/image/topImage.png'),
-                        fit: BoxFit.cover)),
+      body: appBody(height, topImage),
+    );
+  }
+
+  SingleChildScrollView appBody(double height, String topImage) {
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            topImageContainer(height, topImage),
+            Container(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  titleText(),
+                  customSizedBox(),
+                  emailTextField(),
+                  customSizedBox(),
+                  passwordTextField(),
+                  customSizedBox(),
+                  loginButton(),
+                  signUpButton(),
+                  forgotButton(),
+                ],
               ),
-              Container(
-                  child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    titleText(),
-                    customSizedBox(),
-                    usernameTextField(),
-                    customSizedBox(),
-                    passwordTextField(),
-                    customSizedBox(),
-                    customButton("Login"),
-                    customButton("Register"),
-                    customButton("Forgot password"),
-                  ],
-                ),
-              ))
-            ],
-          ),
+            ))
+          ],
         ),
       ),
     );
+  }
+
+  Container topImageContainer(double height, String topImage) {
+    return Container(
+            height: height * 0.25,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(topImage),
+                    fit: BoxFit.cover)),
+          );
   }
 
 
@@ -65,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  TextField usernameTextField() {
+  TextField emailTextField() {
     return TextField(
       decoration: 
       
@@ -75,17 +84,18 @@ class _LoginPageState extends State<LoginPage> {
 
 // hi welcome text field...
   Text titleText() {
+    MainAxisAlignment.start;
     return Text(
       ' Hi! \n Welcome',
       style: CustomTextStyle.titleTextStlye,
     );
   }
 
-//custom button for signin signup and forgot ur password
-  Center customButton(String textButton) {
+//custom button for login button signup and forgot ur password
+  Center loginButton() {
     return Center(
       child: TextButton(
-        onPressed: () {},
+        onPressed: (){},
         child: Container(
           height: 50,
           width: 175,
@@ -94,7 +104,48 @@ class _LoginPageState extends State<LoginPage> {
               color: Color(0xfffb98d58)),
           child: Center(
             child: Text(
-              textButton,
+              "Login",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Center signUpButton() {
+    return Center(
+      child: TextButton(
+        onPressed: () => Navigator.pushNamed(context, "/signUp"),
+        child: Container(
+          height: 50,
+          width: 175,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: Color(0xfffb98d58)),
+          child: Center(
+            child: Text(
+              "Sign Up",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Center forgotButton() {
+    return Center(
+      child: TextButton(
+        onPressed: (){},
+        child: Container(
+          height: 50,
+          width: 175,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: Color(0xfffb98d58)),
+          child: Center(
+            child: Text(
+              "Forgot Password",
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -118,3 +169,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
+//register button onpresseed
+
