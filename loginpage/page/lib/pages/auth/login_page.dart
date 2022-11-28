@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:page/service/auth_service.dart';
 import 'package:page/utils/customColors.dart';
 import 'package:page/utils/customTextStyle.dart';
+import 'package:page/widgets/custom_text_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   late String email, password;
   final formkey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
+  final authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +56,17 @@ class _LoginPageState extends State<LoginPage> {
                     loginButton(),
                     signUpButton(),
                     forgotButton(),
+                    CustomTextButton(
+                        onPressed: () {
+                          final result =  authService.signInAnonymous();
+                          if (result != null) {
+                            Navigator.pushReplacementNamed(context, "/homePage");
+                          }else{
+                            print("Have some problems..");
+                          }
+                        },
+                        buttonText: "Guest",
+                        textColor: CustomColors.buttonText)
                   ],
                 ),
               ),
@@ -79,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
       validator: (value) {
         if (value!.isEmpty) {
           return "Check your password.";
-        }else{}
+        } else {}
       },
       onSaved: (value) {
         password = value!;
@@ -97,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
         } else {}
       },
       onSaved: (value) {
-       email = value!;
+        email = value!;
       },
       decoration: customInputDecoration("Email"),
     );
@@ -133,18 +147,19 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-void login() async {
+
+  void login() async {
     if (formkey.currentState!.validate()) {
       formkey.currentState!.save();
       try {
         var userResult = await firebaseAuth.signInWithEmailAndPassword(
             email: email, password: password);
-            print(userResult.user!.email);
-            Navigator.pushReplacementNamed(context, "/homePage");
+        print(userResult.user!.email);
+        Navigator.pushReplacementNamed(context, "/homePage");
       } catch (e) {
         print(e.toString());
       }
-    }else{}
+    } else {}
   }
 
   Center signUpButton() {
@@ -204,10 +219,3 @@ void login() async {
     );
   }
 }
-
-
-
-
-
-//register button onpresseed
-
