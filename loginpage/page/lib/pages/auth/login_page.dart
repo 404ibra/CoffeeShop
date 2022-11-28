@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:page/pages/home_page.dart';
 import 'package:page/service/auth_service.dart';
 import 'package:page/utils/customColors.dart';
 import 'package:page/utils/customTextStyle.dart';
@@ -18,6 +19,8 @@ class _LoginPageState extends State<LoginPage> {
   late String email, password;
   final formkey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
+
+  //called class on "service folder/auth_service.dart" file ...
   final authService = AuthService();
 
   @override
@@ -58,10 +61,11 @@ class _LoginPageState extends State<LoginPage> {
                     forgotButton(),
                     CustomTextButton(
                         onPressed: () {
-                          final result =  authService.signInAnonymous();
+                          final result = authService.signInAnonymous();
                           if (result != null) {
-                            Navigator.pushReplacementNamed(context, "/homePage");
-                          }else{
+                            Navigator.pushReplacementNamed(
+                                context, "/homePage");
+                          } else {
                             print("Have some problems..");
                           }
                         },
@@ -130,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
   Center loginButton() {
     return Center(
       child: TextButton(
-        onPressed: login,
+        onPressed: signIn,
         child: Container(
           height: 50,
           width: 175,
@@ -148,18 +152,30 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void login() async {
+  void signIn() async {
     if (formkey.currentState!.validate()) {
       formkey.currentState!.save();
-      try {
-        var userResult = await firebaseAuth.signInWithEmailAndPassword(
-            email: email, password: password);
-        print(userResult.user!.email);
-        Navigator.pushReplacementNamed(context, "/homePage");
-      } catch (e) {
-        print(e.toString());
+      final result = await authService.signIn(email, password);
+      if (result == "success") {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => HomePage()),
+            (route) => false);
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Error"),
+                content: Text(result!),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Icon(Icons.close_rounded))
+                ],
+              );
+            });
       }
-    } else {}
+    }
   }
 
   Center signUpButton() {
@@ -204,10 +220,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-//Login Page standart SizedBox height is 20...
   Widget customSizedBox() => SizedBox(
         height: 20,
       );
+//Login Page standart SizedBox height is 20...
 
 // For TextField Decoration...
   InputDecoration customInputDecoration(String hintText) {

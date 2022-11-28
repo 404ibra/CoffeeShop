@@ -2,8 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:page/service/auth_service.dart';
 import 'package:page/utils/customColors.dart';
 import 'package:page/utils/customTextStyle.dart';
+
+import '../home_page.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -13,9 +16,10 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  late String email, password;
+  late String email, username, fullname, password;
   final formKey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
+  final authService = AuthService();
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -48,6 +52,10 @@ class _SignUpState extends State<SignUp> {
                     customSizedBox(),
                     passwordTextField(),
                     customSizedBox(),
+                    usernameTextField(),
+                    customSizedBox(),
+                    fullnameTextField(),
+                    customSizedBox(),
                     backTopLoginPage(),
                     signUpButton()
                   ],
@@ -69,7 +77,48 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-//username and password textfields...
+//username ,password, username and fullname textfields...
+  TextFormField emailTextField() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Check your email";
+        } else {}
+      },
+      onSaved: (value) {
+        email = value!;
+      },
+      decoration: customInputDecoration("Email"),
+    );
+  }
+
+  TextFormField usernameTextField() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Check your username";
+        } else {}
+      },
+      onSaved: (value) {
+        username = value!;
+      },
+      decoration: customInputDecoration("Username"),
+    );
+  }
+
+  TextFormField fullnameTextField() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Check your Full Name";
+        } else {}
+      },
+      onSaved: (value) {
+        fullname = value!;
+      },
+      decoration: customInputDecoration("Full Name"),
+    );
+  }
 
   TextFormField passwordTextField() {
     return TextFormField(
@@ -83,20 +132,6 @@ class _SignUpState extends State<SignUp> {
       },
       obscureText: true,
       decoration: customInputDecoration("Password"),
-    );
-  }
-
-  TextFormField emailTextField() {
-    return TextFormField(
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Check your email";
-        } else {}
-      },
-      onSaved: (value) {
-        email = value!;
-      },
-      decoration: customInputDecoration("Email"),
     );
   }
 
@@ -152,21 +187,15 @@ class _SignUpState extends State<SignUp> {
   }
 
   void signUp() async {
-        if (formKey.currentState!.validate()) {
-          formKey.currentState!.save();
-          try {
-            var UserResult =
-                await firebaseAuth.createUserWithEmailAndPassword(
-                    email: email, password: password);
-            formKey.currentState!.reset();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("Sing Up is Successfull Please Login")));
-            Navigator.pushReplacementNamed(context, "/loginPage");
-          } catch (e) {
-            print(e.toString());
-          }
-        }
-      }
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      final result =
+          await authService.signUp(email, username, fullname, password);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => HomePage()),
+          (route) => false);
+    } else {}
+  }
 
 //Login Page standart SizedBox height is 20...
   Widget customSizedBox() => SizedBox(
