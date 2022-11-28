@@ -133,21 +133,7 @@ class _SignUpState extends State<SignUp> {
   Center signUpButton() {
     return Center(
       child: TextButton(
-        onPressed: () async {
-          if (formKey.currentState!.validate()) {
-            formKey.currentState!.save();
-            try {
-              var UserResult =
-                  await firebaseAuth.createUserWithEmailAndPassword(
-                      email: email, password: password);
-                      formKey.currentState!.reset();
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sing Up is Successfull Please Login")));
-                      Navigator.pushReplacementNamed(context, "/loginPage");
-            } catch (e) {
-              print(e.toString());
-            }
-          }
-        },
+        onPressed: signUp,
         child: Container(
           height: 50,
           width: 175,
@@ -164,6 +150,23 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+
+  void signUp() async {
+        if (formKey.currentState!.validate()) {
+          formKey.currentState!.save();
+          try {
+            var UserResult =
+                await firebaseAuth.createUserWithEmailAndPassword(
+                    email: email, password: password);
+            formKey.currentState!.reset();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Sing Up is Successfull Please Login")));
+            Navigator.pushReplacementNamed(context, "/loginPage");
+          } catch (e) {
+            print(e.toString());
+          }
+        }
+      }
 
 //Login Page standart SizedBox height is 20...
   Widget customSizedBox() => SizedBox(

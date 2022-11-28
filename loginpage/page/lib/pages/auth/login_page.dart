@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,12 +13,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late String email, password;
+  final formkey = GlobalKey<FormState>();
+  final firebaseAuth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     String topImage = "assets/image/topImage.png";
+
     return Scaffold(
-     
       //Normally  when we pressed textfield it gives an error because other texfields are closed but we added we can prevent this erro  r
       //  with SingleChildScrollView()...
       body: appBody(height, topImage),
@@ -34,19 +39,22 @@ class _LoginPageState extends State<LoginPage> {
             Container(
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  titleText(),
-                  customSizedBox(),
-                  emailTextField(),
-                  customSizedBox(),
-                  passwordTextField(),
-                  customSizedBox(),
-                  loginButton(),
-                  signUpButton(),
-                  forgotButton(),
-                ],
+              child: Form(
+                key: formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    titleText(),
+                    customSizedBox(),
+                    emailTextField(),
+                    customSizedBox(),
+                    passwordTextField(),
+                    customSizedBox(),
+                    loginButton(),
+                    signUpButton(),
+                    forgotButton(),
+                  ],
+                ),
               ),
             ))
           ],
@@ -57,28 +65,41 @@ class _LoginPageState extends State<LoginPage> {
 
   Container topImageContainer(double height, String topImage) {
     return Container(
-            height: height * 0.25,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(topImage),
-                    fit: BoxFit.cover)),
-          );
+      height: height * 0.25,
+      decoration: BoxDecoration(
+          image:
+              DecorationImage(image: AssetImage(topImage), fit: BoxFit.cover)),
+    );
   }
-
 
 //username and password textfields...
 
-  TextField passwordTextField() {
-    return TextField(
+  TextFormField passwordTextField() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Check your password.";
+        }else{}
+      },
+      onSaved: (value) {
+        password = value!;
+      },
+      obscureText: true,
       decoration: customInputDecoration("Password"),
     );
   }
 
-  TextField emailTextField() {
-    return TextField(
-      decoration: 
-      
-      customInputDecoration("Email"),
+  TextFormField emailTextField() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Check your e-mail.";
+        } else {}
+      },
+      onSaved: (value) {
+       email = value!;
+      },
+      decoration: customInputDecoration("Email"),
     );
   }
 
@@ -95,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
   Center loginButton() {
     return Center(
       child: TextButton(
-        onPressed: (){},
+        onPressed: login,
         child: Container(
           height: 50,
           width: 175,
@@ -112,6 +133,20 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+void login() async {
+    if (formkey.currentState!.validate()) {
+      formkey.currentState!.save();
+      try {
+        var userResult = await firebaseAuth.signInWithEmailAndPassword(
+            email: email, password: password);
+            print(userResult.user!.email);
+            Navigator.pushReplacementNamed(context, "/homePage");
+      } catch (e) {
+        print(e.toString());
+      }
+    }else{}
+  }
+
   Center signUpButton() {
     return Center(
       child: TextButton(
@@ -132,11 +167,11 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  
+
   Center forgotButton() {
     return Center(
       child: TextButton(
-        onPressed: (){},
+        onPressed: () {},
         child: Container(
           height: 50,
           width: 175,
@@ -162,13 +197,16 @@ class _LoginPageState extends State<LoginPage> {
 // For TextField Decoration...
   InputDecoration customInputDecoration(String hintText) {
     return InputDecoration(
-        hintText: hintText,
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-        ),
+      hintText: hintText,
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+      ),
     );
   }
 }
+
+
+
 
 
 //register button onpresseed

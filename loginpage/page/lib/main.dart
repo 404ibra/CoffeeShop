@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:page/pages/auth/login_page.dart';
 import 'package:page/pages/auth/sign_up.dart';
+import 'package:page/pages/home_page.dart';
 import 'package:page/utils/customColors.dart';
 import 'firebase_options.dart';
 
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/loginPage" :(context) => LoginPage(),
         "/signUp" :(context) => SignUp(),
+        "/homePage":(context) => HomePage(),
 
       },
       theme: ThemeData(
