@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
 
       },
       theme: ThemeData(
-        scaffoldBackgroundColor: CustomColors.backgroundColor
+        scaffoldBackgroundColor: CustomColors.backgroundColor,
+        appBarTheme: AppBarTheme(color: CustomColors.customButtonColor)
       ),
       debugShowCheckedModeBanner: false,
       home: const TabBarController(),

@@ -6,6 +6,7 @@ class CustomColors {
   static const backgroundColor = Color(0XfffEFDCCC);
   static const textHeadColor = Color(0xfff252525);
   static const buttonText = Color(0xfffFFFAFA);
-}
+  static const darkButtonColor = Color(0xfff181313);
+  }
 
 
