@@ -7,6 +7,7 @@ class AuthService {
   final firebaseAuth = FirebaseAuth.instance;
   final firebaseFirestore = FirebaseFirestore.instance;
 
+//sign in a
   Future signInAnonymous() async {
     try {
       final result = await firebaseAuth.signInAnonymously();
@@ -17,7 +18,7 @@ class AuthService {
       return null;
     }
   }
-
+//forgot password function...
   Future forgotPassword(String email) async {
     try {
       final result = await firebaseAuth.sendPasswordResetEmail(email: email);
